@@ -1,0 +1,10 @@
+---
+
+# Ubuntu specific vars
+
+ferm_packages:
+  - 'iptables'
+  - 'ferm'
+
+ferm_service_name: 'ferm'
+

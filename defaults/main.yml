@@ -2,3 +2,7 @@
 
 # Defaults vars file for ferm role
 
+ferm_repository_cache_valid_time: 3600
+ferm_service_state: 'started'
+ferm_service_enabled: True
+

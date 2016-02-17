@@ -2,3 +2,9 @@
 
 # Handlers main file for ferm role
 
+- name: restart ferm
+  become: True
+  service:
+    name: "{{ ferm_service_name }}"
+    state: 'restarted'
+
