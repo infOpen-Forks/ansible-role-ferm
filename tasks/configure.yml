@@ -18,7 +18,7 @@
 - name: Add ferm default config file
   become: True
   template:
-    src: "{{ role_path }}/files/ferm.conf"
+    src: "{{ role_path }}/templates/ferm.conf.j2"
     dest: "{{ ferm_main_config_directory }}/ferm.conf"
     owner: "{{ ferm_config_files_owner }}"
     group: "{{ ferm_config_files_group }}"

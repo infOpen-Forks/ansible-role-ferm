@@ -15,3 +15,24 @@ ferm_config_files_mode: '0400'
 
 ferm_main_config_directory: '/etc/ferm'
 
+# Configuration
+ferm_input_policy: 'ACCEPT'
+ferm_forward_policy: 'DROP'
+ferm_output_policy: 'ACCEPT'
+
+ferm_input_before_include_rules:
+  # Connection tracking.
+  - 'mod state state INVALID DROP;'
+  - 'mod state state (ESTABLISHED RELATED) ACCEPT;'
+  # Allow local connections.
+  - 'interface lo ACCEPT;'
+  # Respond to ping.
+  - 'proto icmp icmp-type echo-request ACCEPT;'
+  # Allow ssh connections.
+  - 'proto tcp dport ssh ACCEPT;'
+ferm_input_after_include_rules:
+  - 'DROP;'
+ferm_forward_before_include_rules: []
+ferm_forward_after_include_rules: []
+ferm_output_before_include_rules: []
+ferm_output_after_include_rules: []
