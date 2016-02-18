@@ -27,9 +27,14 @@
   become: True
   service:
     name: "{{ ferm_service_name }}"
-    state: "{{ ferm_service_state }}"
     enabled: "{{ ferm_service_enabled }}"
   tags:
     - ferm
     - install
+
+- name: Manage configuration
+  include: "{{ role_path }}/tasks/configure.yml"
+  tags:
+    - ferm
+    - config
 

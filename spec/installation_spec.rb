@@ -18,6 +18,32 @@ if ['debian', 'ubuntu'].include?(os[:family])
             end
 
         end
+
+        CONFIG_DIRECTORIES = Array[
+            '/etc/ferm/input',
+            '/etc/ferm/output',
+            '/etc/ferm/forward'
+        ]
+        CONFIG_DIRECTORIES.each() do |folder|
+            describe file(folder) do
+                it { should exist }
+                it { should be_directory }
+                it { should be_mode 700 }
+                it { should be_owned_by 'root' }
+                it { should be_grouped_into'root' }
+            end
+        end
     end
 end
 
+describe iptables do
+  it { should have_rule('-P INPUT ACCEPT') }
+  it { should have_rule('-P FORWARD DROP') }
+  it { should have_rule('-P OUTPUT ACCEPT') }
+  it { should have_rule('-A INPUT -m state --state INVALID -j DROP') }
+  it { should have_rule('-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT') }
+  it { should have_rule('-A INPUT -i lo -j ACCEPT') }
+  it { should have_rule('-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT') }
+  it { should have_rule('-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT') }
+  it { should have_rule('-A INPUT -j DROP') }
+end

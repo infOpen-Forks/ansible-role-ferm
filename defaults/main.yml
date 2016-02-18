@@ -3,6 +3,15 @@
 # Defaults vars file for ferm role
 
 ferm_repository_cache_valid_time: 3600
-ferm_service_state: 'started'
 ferm_service_enabled: True
+
+ferm_config_directories_owner: 'root'
+ferm_config_directories_group: 'root'
+ferm_config_directories_mode: '0700'
+
+ferm_config_files_owner: 'root'
+ferm_config_files_group: 'root'
+ferm_config_files_mode: '0400'
+
+ferm_main_config_directory: '/etc/ferm'
 
