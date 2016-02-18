@@ -2,3 +2,39 @@
 
 # Main tasks file for ferm role
 
+- name: Load distribution variables
+  include_vars: "{{ role_path }}/vars/{{ ansible_distribution | lower }}.yml"
+  tags:
+    - ferm
+    - install
+
+- name: Manage distribution specific installation tasks
+  include: "{{ role_path }}/tasks/install_{{ ansible_distribution|lower }}.yml"
+  tags:
+    - ferm
+    - install
+
+- name: Install packages
+  become: True
+  package:
+    name: "{{ item }}"
+  with_items: "{{ ferm_packages }}"
+  tags:
+    - ferm
+    - install
+
+- name: Enable service
+  become: True
+  service:
+    name: "{{ ferm_service_name }}"
+    enabled: "{{ ferm_service_enabled }}"
+  tags:
+    - ferm
+    - install
+
+- name: Manage configuration
+  include: "{{ role_path }}/tasks/configure.yml"
+  tags:
+    - ferm
+    - config
+
