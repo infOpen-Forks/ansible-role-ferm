@@ -7,4 +7,3 @@ ferm_packages:
   - 'ferm'
 
 ferm_service_name: 'ferm'
-
