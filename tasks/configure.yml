@@ -1,6 +1,6 @@
 ---
 
-- name: Add ferm config directories
+- name: 'Add ferm config directories'
   become: True
   file:
     path: "{{item}}"
@@ -8,14 +8,15 @@
     group: "{{ ferm_config_directories_group }}"
     mode: "{{ ferm_config_directories_mode }}"
     state: 'directory'
-  notify: restart ferm
+  notify: 'restart ferm'
   with_items:
     - "{{ ferm_main_config_directory }}"
     - "{{ ferm_main_config_directory }}/input"
     - "{{ ferm_main_config_directory }}/output"
     - "{{ ferm_main_config_directory }}/forward"
 
-- name: Add ferm default config file
+
+- name: 'Add ferm default config file'
   become: True
   template:
     src: "{{ role_path }}/templates/ferm.conf.j2"
@@ -23,10 +24,10 @@
     owner: "{{ ferm_config_files_owner }}"
     group: "{{ ferm_config_files_group }}"
     mode: "{{ ferm_config_files_mode }}"
-  notify: restart ferm
+  notify: 'restart ferm'
 
-- name: Check ferm configuration
+
+- name: 'Check ferm configuration'
   become: True
   command: "ferm -n {{ ferm_main_config_directory }}/ferm.conf"
   changed_when: False
-

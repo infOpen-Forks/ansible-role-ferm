@@ -2,12 +2,11 @@
 
 # Role Vagrant tests
 
-- hosts: all
-  remote_user: vagrant
+- hosts: 'all'
+  remote_user: 'vagrant'
   roles:
     - "{{ role_name }}"
   post_tasks:
-    - include: ./test_common.yml
+    - include: './test_common.yml'
   vars:
     role_name: "{{ lookup('env','ANSIBLE_ROLE_NAME') }}"
-
