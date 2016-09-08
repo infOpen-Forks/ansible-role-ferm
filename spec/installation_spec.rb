@@ -19,19 +19,12 @@ if ['debian', 'ubuntu'].include?(os[:family])
 
         end
 
-        CONFIG_DIRECTORIES = Array[
-            '/etc/ferm/input',
-            '/etc/ferm/output',
-            '/etc/ferm/forward'
-        ]
-        CONFIG_DIRECTORIES.each() do |folder|
-            describe file(folder) do
-                it { should exist }
-                it { should be_directory }
-                it { should be_mode 700 }
-                it { should be_owned_by 'root' }
-                it { should be_grouped_into'root' }
-            end
+        describe file('/etc/ferm/ferm.conf') do
+            it { should exist }
+            it { should be_file }
+            it { should be_mode 400 }
+            it { should be_owned_by 'root' }
+            it { should be_grouped_into'root' }
         end
     end
 end
