@@ -1,53 +1,20 @@
-table filter {
-    chain INPUT {
-        # Set the default policy to ACCEPT to avoid getting
-        # accidentally locked out.
-        policy {{ ferm_input_policy }};
+# {{ ansible_managed }}
 
-        {% for rule in ferm_input_before_include_rules %}
+# Tables management
+{% for table_name, table_content in ferm_tables.iteritems() %}
+table {{ table_name }} {
+
+{% for chain_name, chain_content in table_content.iteritems() %}
+    chain {{ chain_name }} {
+        policy {{ chain_content.policy }};
+
+{% for rule in chain_content.rules %}
         {{ rule }}
-        {% endfor %}
-
-        # include all files in input folder
-        @include 'input/';
-
-        {% for rule in ferm_input_after_include_rules %}
-        {{ rule }}
-        {% endfor %}
+{% endfor %}
     }
-
-    chain OUTPUT {
-        # Outgoing connections are not limited.
-        policy {{ ferm_output_policy }};
-
-        {% for rule in ferm_output_before_include_rules %}
-        {{ rule }}
-        {% endfor %}
-
-        # include all files in output folder
-        @include 'output/';
-
-        {% for rule in ferm_output_after_include_rules %}
-        {{ rule }}
-        {% endfor %}
-    }
-
-    chain FORWARD {
-        # Outgoing connections are not limited.
-        policy {{ ferm_forward_policy }};
-
-        {% for rule in ferm_forward_before_include_rules %}
-        {{ rule }}
-        {% endfor %}
-
-        # include all files in forward folder
-        @include 'forward/';
-
-        {% for rule in ferm_forward_after_include_rules %}
-        {{ rule }}
-        {% endfor %}
-    }
+{% endfor %}
 }
+{% endfor %}
 
 # Add hooks to reload fail2ban rules automaticaly
 @hook post "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
