@@ -5,15 +5,15 @@
 - name: 'Load distribution variables'
   include_vars: "{{ role_path }}/vars/{{ ansible_distribution | lower }}.yml"
   tags:
-    - 'ferm'
-    - 'install'
+    - 'ferm::role'
+    - 'ferm::install'
 
 
 - name: 'Manage distribution specific installation tasks'
   include: "{{ role_path }}/tasks/install_{{ ansible_distribution|lower }}.yml"
   tags:
-    - 'ferm'
-    - 'install'
+    - 'ferm::role'
+    - 'ferm::install'
 
 
 - name: 'Install packages'
@@ -22,8 +22,8 @@
     name: "{{ item }}"
   with_items: "{{ ferm_packages }}"
   tags:
-    - 'ferm'
-    - 'install'
+    - 'ferm::role'
+    - 'ferm::install'
 
 
 - name: 'Enable service'
@@ -32,12 +32,12 @@
     name: "{{ ferm_service_name }}"
     enabled: "{{ ferm_service_enabled }}"
   tags:
-    - 'ferm'
-    - 'install'
+    - 'ferm::role'
+    - 'ferm::install'
 
 
 - name: 'Manage configuration'
   include: "{{ role_path }}/tasks/configure.yml"
   tags:
-    - 'ferm'
-    - 'config'
+    - 'ferm::role'
+    - 'ferm::config'
