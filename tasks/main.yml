@@ -6,45 +6,33 @@
   include: "{{ role_path }}/tasks/manage_variables.yml"
   tags:
     - 'role::ferm'
+    - 'role::ferm::config'
     - 'role::ferm::init'
+    - 'role::ferm::install'
 
 
-- name: 'Load distribution variables'
-  include_vars: "{{ role_path }}/vars/{{ ansible_distribution | lower }}.yml"
-  tags:
-    - 'ferm::role'
-    - 'ferm::install'
-
-
-- name: 'Manage distribution specific installation tasks'
-  include: "{{ role_path }}/tasks/install_{{ ansible_distribution|lower }}.yml"
-  tags:
-    - 'ferm::role'
-    - 'ferm::install'
-
-
-- name: 'Install packages'
+- name: 'INSTALL | Manage OS family specific installation tasks'
   become: True
-  package:
-    name: "{{ item }}"
-  with_items: "{{ ferm_packages }}"
+  include: "{{ role_path }}/tasks/install_{{ ansible_os_family | lower }}.yml"
   tags:
-    - 'ferm::role'
-    - 'ferm::install'
+    - 'role::ferm'
+    - 'role::ferm::install'
 
 
-- name: 'Enable service'
+- name: 'SERVICE | Manage service'
   become: True
   service:
     name: "{{ ferm_service_name }}"
     enabled: "{{ ferm_service_enabled }}"
   tags:
-    - 'ferm::role'
-    - 'ferm::install'
+    - 'role::ferm'
+    - 'role::ferm::config'
+    - 'role::ferm::install'
 
 
-- name: 'Manage configuration'
+- name: 'CONFIG | Manage configuration'
+  become: True
   include: "{{ role_path }}/tasks/configure.yml"
   tags:
-    - 'ferm::role'
-    - 'ferm::config'
+    - 'role::ferm'
+    - 'role::ferm::config'

@@ -23,7 +23,7 @@ def test_packages(host, name):
 @pytest.mark.parametrize('item_type,path,user,group,mode', [
     ('file', '/etc/ferm/ferm.conf', 'root', 'root', 0o400),
 ])
-def test_files_and_folders(host, item_type,path,user,group,mode):
+def test_files_and_folders(host, item_type, path, user, group, mode):
     """
     Test files and folders properties
     """
@@ -37,7 +37,7 @@ def test_files_and_folders(host, item_type,path,user,group,mode):
 
     assert current_item.user == user
     assert current_item.group == group
-    assert current_item.moe == mode
+    assert current_item.mode == mode
 
 
 def test_firewall_rules(host):

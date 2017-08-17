@@ -1,0 +1,11 @@
+---
+
+# Debian OS family specific vars
+
+# Package management
+_ferm_packages:
+  - name: 'iptables'
+  - name: 'ferm'
+
+# Service management
+_ferm_service_name: 'ferm'

@@ -16,12 +16,15 @@ docker:
     - name: 'ferm-docker-jessie'
       image: 'debian'
       image_version: 'jessie'
+      privileged: True
     - name: 'ferm-docker-trusty'
       image: 'ubuntu'
       image_version: 'trusty'
+      privileged: True
     - name: 'ferm-docker-xenial'
       image: 'ubuntu'
       image_version: 'xenial'
+      privileged: True
 molecule:
   ignore_paths:
     - '.git'

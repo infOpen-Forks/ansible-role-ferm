@@ -2,9 +2,18 @@
 
 # Defaults vars file for ferm role
 
+# Repository management
 ferm_repository_cache_valid_time: 3600
-ferm_service_enabled: True
+ferm_repository_update_cache: True
 
+# Packages management
+ferm_packages: "{{ _ferm_packages }}"
+
+# Service management
+ferm_service_enabled: True
+ferm_service_name: "{{ _ferm_service_name }}"
+
+# Paths management
 ferm_config_directories_owner: 'root'
 ferm_config_directories_group: 'root'
 ferm_config_directories_mode: '0700'
