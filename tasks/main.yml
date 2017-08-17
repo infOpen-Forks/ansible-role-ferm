@@ -2,6 +2,13 @@
 
 # Main tasks file for ferm role
 
+- name: 'INIT | Manage variables to use for our target'
+  include: "{{ role_path }}/tasks/manage_variables.yml"
+  tags:
+    - 'role::ferm'
+    - 'role::ferm::init'
+
+
 - name: 'Load distribution variables'
   include_vars: "{{ role_path }}/vars/{{ ansible_distribution | lower }}.yml"
   tags:

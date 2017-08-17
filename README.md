@@ -11,30 +11,84 @@ and platform requirements are listed in the metadata file.
 
 ## Testing
 
-This role contains two tests methods :
-- locally using Vagrant
-- automatically with Travis
+This role use [Molecule](https://github.com/metacloud/molecule/) to run tests.
 
-### Testing dependencies
-- install [Vagrant](https://www.vagrantup.com)
-- install [Vagrant serverspec plugin](https://github.com/jvoorhis/vagrant-serverspec)
-    $ vagrant plugin install vagrant-serverspec
-- install ruby dependencies
-    $ bundle install
+Locally, you can run tests on Docker (default driver) or Vagrant.
+Travis run tests using Docker driver only.
+
+Currently, tests are done on:
+- Debian Jessie
+- Ubuntu Trusty
+- Ubuntu Xenial
+
+and use:
+- Ansible 2.0.x
+- Ansible 2.1.x
+- Ansible 2.2.x
+- Ansible 2.3.x
 
 ### Running tests
 
-#### Run playbook and test
+#### Using Docker driver
 
-- if Vagrant box not running
-    $ vagrant up
+```
+$ tox
+```
 
-- if Vagrant box running
-    $ vagrant provision
+#### Using Vagrant driver
+
+```
+$ MOLECULE_DRIVER=vagrant tox
+```
 
 ## Role Variables
 
 ### Default role variables
+
+``` yaml
+ferm_repository_cache_valid_time: 3600
+ferm_service_enabled: True
+
+ferm_config_directories_owner: 'root'
+ferm_config_directories_group: 'root'
+ferm_config_directories_mode: '0700'
+
+ferm_config_files_owner: 'root'
+ferm_config_files_group: 'root'
+ferm_config_files_mode: '0400'
+
+ferm_main_config_directory: '/etc/ferm'
+
+# Configuration
+ferm_tables:
+  filter:
+    INPUT:
+      policy: 'ACCEPT'
+      rules:
+        # Connection tracking.
+        - 'mod state state INVALID DROP;'
+        - 'mod state state (ESTABLISHED RELATED) ACCEPT;'
+        # Allow local connections.
+        - 'interface lo ACCEPT;'
+        # Respond to ping.
+        - 'proto icmp icmp-type echo-request ACCEPT;'
+        # Allow ssh connections.
+        - 'proto tcp dport ssh ACCEPT;'
+        - 'DROP;'
+    OUTPUT:
+      policy: 'ACCEPT'
+      rules: []
+    FORWARD:
+      policy: 'DROP'
+      rules: []
+  nat:
+    PREROUTING:
+      policy: 'ACCEPT'
+      rules: []
+    POSTROUTING:
+      policy: 'ACCEPT'
+      rules: []
+```
 
 ## Dependencies
 
@@ -42,9 +96,11 @@ None
 
 ## Example Playbook
 
-    - hosts: servers
-      roles:
-         - { role: achaussier.ferm }
+``` yaml
+- hosts: servers
+  roles:
+    - { role: Temelio.ferm }
+```
 
 ## License
 
@@ -53,6 +109,5 @@ MIT
 ## Author Information
 
 Alexandre Chaussier (for Temelio company)
-- http://temelio.com
+- http://www.temelio.com
 - alexandre.chaussier [at] temelio.com
-
