@@ -1,28 +1,25 @@
 ---
 
-- name: 'Add ferm config directories'
-  become: True
+- name: 'CONFIG | Add ferm config directories'
   file:
     path: "{{ ferm_main_config_directory }}"
     owner: "{{ ferm_config_directories_owner }}"
     group: "{{ ferm_config_directories_group }}"
     mode: "{{ ferm_config_directories_mode }}"
     state: 'directory'
-  notify: 'restart ferm'
+  notify: 'HANDLER | Restart ferm'
 
 
-- name: 'Add ferm config file'
-  become: True
+- name: 'CONFIG | Add ferm config file'
   template:
     src: "{{ role_path }}/templates/ferm.conf.j2"
     dest: "{{ ferm_main_config_directory }}/ferm.conf"
     owner: "{{ ferm_config_files_owner }}"
     group: "{{ ferm_config_files_group }}"
     mode: "{{ ferm_config_files_mode }}"
-  notify: 'restart ferm'
+  notify: 'HANDLER | Restart ferm'
 
 
-- name: 'Check ferm configuration'
-  become: True
+- name: 'CONFIG | Check ferm configuration'
   command: "ferm -n {{ ferm_main_config_directory }}/ferm.conf"
   changed_when: False

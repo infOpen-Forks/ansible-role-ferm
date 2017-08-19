@@ -1,7 +1,0 @@
----
-
-- name: 'Update apt cache if repository not changed'
-  become: True
-  apt:
-    update_cache: True
-    cache_valid_time: "{{ ferm_repository_cache_valid_time }}"

@@ -1,0 +1,10 @@
+---
+
+- name: 'INSTALL | APT | Install packages'
+  apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+    update_cache: "{{ ferm_repository_update_cache }}"
+    cache_valid_time: "{{ ferm_repository_cache_valid_time }}"
+  notify: 'HANDLER | Restart ferm'
+  with_items: "{{ ferm_packages }}"
