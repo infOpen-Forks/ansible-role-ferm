@@ -46,15 +46,21 @@ def test_firewall_rules(host):
     """
 
     expected_rules = [
-        '-P INPUT ACCEPT',
+        '-P INPUT DROP',
         '-P FORWARD DROP',
         '-P OUTPUT ACCEPT',
         '-A INPUT -m state --state INVALID -j DROP',
         '-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT',
         '-A INPUT -i lo -j ACCEPT',
-        '-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT',
+        '-A INPUT -p icmp -j ACCEPT',
+        '-A INPUT -p udp -m udp --dport 500 -j ACCEPT',
+        '-A INPUT -p esp -j ACCEPT',
+        '-A INPUT -p ah -j ACCEPT',
         '-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT',
-        '-A INPUT -j DROP',
+        '-A FORWARD -m state --state INVALID -j DROP',
+        '-A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT',
+        '-A OUTPUT -m state --state INVALID -j DROP',
+        '-A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT',
     ]
 
     assert host.check_output('iptables -S').split("\n") == expected_rules

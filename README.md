@@ -68,35 +68,79 @@ ferm_config_files_mode: '0400'
 
 ferm_main_config_directory: '/etc/ferm'
 
+
 # Configuration
-ferm_tables:
-  filter:
-    INPUT:
-      policy: 'ACCEPT'
-      rules:
-        # Connection tracking.
-        - 'mod state state INVALID DROP;'
-        - 'mod state state (ESTABLISHED RELATED) ACCEPT;'
-        # Allow local connections.
-        - 'interface lo ACCEPT;'
-        # Respond to ping.
-        - 'proto icmp icmp-type echo-request ACCEPT;'
-        # Allow ssh connections.
-        - 'proto tcp dport ssh ACCEPT;'
-        - 'DROP;'
-    OUTPUT:
-      policy: 'ACCEPT'
-      rules: []
-    FORWARD:
-      policy: 'DROP'
-      rules: []
-  nat:
-    PREROUTING:
-      policy: 'ACCEPT'
-      rules: []
-    POSTROUTING:
-      policy: 'ACCEPT'
-      rules: []
+#------------------------------------------------------------------------------
+ferm_variables: None
+ferm_functions: None
+ferm_rules: "{{ _ferm_rules }}"
+ferm_hooks: |
+  # Reload fail2ban rules automaticaly
+  @hook post "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
+  @hook flush "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
+```
+
+### Debian OS family variables
+
+``` yaml
+# Package management
+_ferm_packages:
+  - name: 'iptables'
+  - name: 'ferm'
+
+# Service management
+_ferm_service_name: 'ferm'
+
+# Configuration
+_ferm_rules: |
+  table filter {
+    chain INPUT {
+      policy DROP;
+      # connection tracking
+      mod state state INVALID DROP;
+      mod state state (ESTABLISHED RELATED) ACCEPT;
+      # allow local packet
+      interface lo ACCEPT;
+      # respond to ping
+      proto icmp ACCEPT;
+      # allow IPsec
+      proto udp dport 500 ACCEPT;
+      proto (esp ah) ACCEPT;
+      # allow SSH connections
+      proto tcp dport ssh ACCEPT;
+    }
+    chain OUTPUT {
+      policy ACCEPT;
+      # connection tracking
+      mod state state INVALID DROP;
+      mod state state (ESTABLISHED RELATED) ACCEPT;
+    }
+    chain FORWARD {
+      policy DROP;
+      # connection tracking
+      mod state state INVALID DROP;
+      mod state state (ESTABLISHED RELATED) ACCEPT;
+    }
+  }
+```
+
+## How manage configuration
+
+Because Ferm configuration is rich, and I want this role keep simple, the
+configuration is done via four variables:
+* ferm_variables
+* ferm_functions
+* ferm_rules
+* ferm_hooks
+
+No process is done on these variables, their content is copied in configuration
+file
+
+Example, to define hooks to reload fail2ban automaticaly:
+``` yaml
+ferm_hooks: |
+  @hook post "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
+  @hook flush "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
 ```
 
 ## Dependencies

@@ -24,32 +24,13 @@ ferm_config_files_mode: '0400'
 
 ferm_main_config_directory: '/etc/ferm'
 
+
 # Configuration
-ferm_tables:
-  filter:
-    INPUT:
-      policy: 'ACCEPT'
-      rules:
-        # Connection tracking.
-        - 'mod state state INVALID DROP;'
-        - 'mod state state (ESTABLISHED RELATED) ACCEPT;'
-        # Allow local connections.
-        - 'interface lo ACCEPT;'
-        # Respond to ping.
-        - 'proto icmp icmp-type echo-request ACCEPT;'
-        # Allow ssh connections.
-        - 'proto tcp dport ssh ACCEPT;'
-        - 'DROP;'
-    OUTPUT:
-      policy: 'ACCEPT'
-      rules: []
-    FORWARD:
-      policy: 'DROP'
-      rules: []
-  nat:
-    PREROUTING:
-      policy: 'ACCEPT'
-      rules: []
-    POSTROUTING:
-      policy: 'ACCEPT'
-      rules: []
+#------------------------------------------------------------------------------
+ferm_variables: None
+ferm_functions: None
+ferm_rules: "{{ _ferm_rules }}"
+ferm_hooks: |
+  # Reload fail2ban rules automaticaly
+  @hook post "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
+  @hook flush "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
