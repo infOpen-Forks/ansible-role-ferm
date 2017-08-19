@@ -1,21 +1,26 @@
 # {{ ansible_managed }}
 
-# Tables management
-{% for table_name, table_content in ferm_tables.iteritems() %}
-table {{ table_name }} {
+{% if ferm_variables | bool %}
+# Variables
+#------------------------------------------------------------------------------
+{{ ferm_variables }}
 
-{% for chain_name, chain_content in table_content.iteritems() %}
-    chain {{ chain_name }} {
-        policy {{ chain_content.policy }};
+{% endif %}
 
-{% for rule in chain_content.rules %}
-        {{ rule }}
-{% endfor %}
-    }
-{% endfor %}
-}
-{% endfor %}
+{% if ferm_functions | bool %}
+# Fuctions
+#------------------------------------------------------------------------------
+{{ ferm_functions }}
 
-# Add hooks to reload fail2ban rules automaticaly
-@hook post "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
-@hook flush "type fail2ban-server > /dev/null && (fail2ban-client ping > /dev/null && fail2ban-client reload > /dev/null || true) || true";
+{% endif %}
+
+# Rules
+#------------------------------------------------------------------------------
+{{ ferm_rules }}
+
+{% if ferm_hooks | bool %}
+# Hooks
+#------------------------------------------------------------------------------
+
+{{ ferm_hooks }}
+{% endif %}
