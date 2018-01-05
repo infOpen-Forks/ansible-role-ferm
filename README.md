@@ -1,6 +1,10 @@
 # ferm
 
-[![Build Status](https://travis-ci.org/Temelio/ansible-role-ferm.svg?branch=master)](https://travis-ci.org/Temelio/ansible-role-ferm)
+[![Build Status](https://img.shields.io/travis/Temelio/ansible-role-ferm/master.svg?label=travis_master)](https://travis-ci.org/Temelio/ansible-role-ferm)
+[![Build Status](https://img.shields.io/travis/Temelio/ansible-role-ferm/develop.svg?label=travis_develop)](https://travis-ci.org/Temelio/ansible-role-ferm)
+[![Updates](https://pyup.io/repos/github/Temelio/ansible-role-ferm/shield.svg)](https://pyup.io/repos/github/Temelio/ansible-role-ferm/)
+[![Python 3](https://pyup.io/repos/github/Temelio/ansible-role-ferm/python-3-shield.svg)](https://pyup.io/repos/github/Temelio/ansible-role-ferm/)
+[![Ansible Role](https://img.shields.io/ansible/role/7902.svg)](https://galaxy.ansible.com/Temelio/ferm/)
 
 Install ferm package.
 
