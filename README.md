@@ -67,7 +67,7 @@ ferm_main_config_directory: '/etc/ferm'
 
 
 # Configuration
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 ferm_variables: None
 ferm_functions: None
 ferm_rules: "{{ _ferm_rules }}"
