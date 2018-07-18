@@ -26,9 +26,9 @@ ferm_main_config_directory: '/etc/ferm'
 
 
 # Configuration
-#------------------------------------------------------------------------------
-ferm_variables: None
-ferm_functions: None
+# -----------------------------------------------------------------------------
+ferm_variables: ''
+ferm_functions: ''
 ferm_rules: "{{ _ferm_rules }}"
 ferm_hooks: |
   # Reload fail2ban rules automaticaly
