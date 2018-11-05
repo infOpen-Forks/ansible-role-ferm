@@ -16,6 +16,12 @@
       changed_when: False
 
 
+- name: 'Converge | Prerequisites tasks'
+  hosts: 'ferm-docker-centos7'
+  roles:
+    - role: "geerlingguy.repo-epel"
+
+
 - name: 'Converge | Main tasks'
   hosts: 'all'
   roles:

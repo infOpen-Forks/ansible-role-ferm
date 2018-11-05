@@ -23,24 +23,22 @@ def test_packages(host, name):
     assert host.package(name).is_installed
 
 
-@pytest.mark.parametrize('item_type,path,user,group,mode', [
-    ('file', '/etc/ferm/ferm.conf', 'root', 'root', 0o400),
-])
-def test_files_and_folders(host, item_type, path, user, group, mode):
+def test_files_and_folders(host):
     """
     Test files and folders properties
     """
 
-    current_item = host.file(path)
+    config_folder = '/etc/ferm'
 
-    if item_type == 'directry':
-        assert current_item.is_directory
-    elif item_type == 'file':
-        assert current_item.is_file
+    if host.system_info.distribution == 'centos':
+        config_folder = '/etc'
 
-    assert current_item.user == user
-    assert current_item.group == group
-    assert current_item.mode == mode
+    config_file = host.file('{}/ferm.conf'.format(config_folder))
+
+    assert config_file.is_file
+    assert config_file.user == 'root'
+    assert config_file.group == 'root'
+    assert config_file.mode == 0o400
 
 
 def test_firewall_rules(host):
