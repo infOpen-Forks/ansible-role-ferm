@@ -1,0 +1,8 @@
+---
+
+- name: 'INSTALL | YUM | Install packages'
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  notify: 'HANDLER | Restart ferm'
+  with_items: "{{ ferm_packages }}"
